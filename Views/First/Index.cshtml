@@ -1,0 +1,70 @@
+﻿@using WebApplication1.Controllers
+@model List<FirstModel>
+
+@{
+    ViewBag.Title = "First";
+ 
+}
+
+<h2>title</h2>
+<div id="div1">
+    <ul>
+        @foreach (var control in Model)
+        {
+            <li>
+                @switch (control.Type)
+                {
+                    case FirstControlType.DropDownList:
+                        <select id="@(control.Id)Select" class="inputSelect">
+                          
+                        </select>
+                        break;
+                    case FirstControlType.Number:
+                        <input type="text" id="@(control.Id)Input" class="inputNumber"/>
+                        break;
+                }
+                <button id="@(control.Id)Button" class="inputButton" data-type="@control.Type">button1</button>
+            </li>
+        }
+    </ul>
+
+</div>
+@section scripts{
+    <script>
+        $(document).delegate(".inputNumber",
+            "keyup",
+            function() {
+                var val = ($(this).val() || "").replace(/[^\d]/ig, '');
+                if (val != $(this).val()) {
+                    $(this).val(val);
+                }
+            });
+        $(document).delegate(".inputButton",
+            "click",
+            function() {
+                if ($(this).data("type") == "@(FirstControlType.Number)") {
+                    var id = $(this).attr("id").replace("Button", "Input");
+
+                    alert($("#" + id).val());
+                } else if ($(this).data("type") == "@(FirstControlType.DropDownList)") {
+                    var id = $(this).attr("id").replace("Button", "Select");
+
+                    alert($("#" + id).find(":selected").text());
+                }
+            });
+        $(function() {
+            $.post('@Url.Action("GetData")', function (d) {
+                var str = "";
+                for (var i = 0; i < d.length; i++) {
+                    str += "<option value='";
+                    str += d[i].id;
+                    str += "'>";
+                    str += d[i].name;
+                    str += "</option>";
+                }
+                
+                $(".inputSelect").html(str)
+            });
+        });
+    </script>
+}

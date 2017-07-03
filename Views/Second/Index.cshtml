@@ -1,0 +1,38 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Second";
+}
+
+<h2>title</h2>
+Operator
+<select id="operator">
+    <option value="+">+</option>
+    <option value="-">-</option>
+    <option value="*">*</option>
+    <option value="/">/</option>
+</select>
+
+FirstNum
+<input type="number" id="num1" />
+SecondNum
+<input type="number" id="num2" />
+<button id="calc">Calc</button>
+
+result:<input type="number" id="result" />
+@section scripts
+{
+    <script>
+        $("#calc").click(function() {
+            var data = {
+                num1: $("#num1").val(),
+                num2: $("#num2").val(),
+                operator: $("#operator").val()
+            };
+            $.post('@Url.Action("Calc")', data, function(r) {
+                $("#result").val(r);
+            });
+        });
+    </script>
+}
+
