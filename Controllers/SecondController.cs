@@ -38,7 +38,7 @@ namespace WebApplication1.Controllers
             var const2 = Expression.Constant(Num2, Num2.GetType());
 
             var method = Expression.Lambda<Func<double>>(operExp.Invoke(const1, const2));
-            return (double) method.Compile()();
+            return method.Compile()();
         }
 
         public double Num1 { get; set; }
